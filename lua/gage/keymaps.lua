@@ -17,7 +17,7 @@ keymap("v", ">", ">gv", opts)
 keymap("v", "<", "<gv", opts)
 
 -- Telescope
-keymap("n", "<leader>ff", "<cmd> Telescope find_files <CR>", opts)
+-- keymap("n", "<leader>ff", "<cmd> Telescope find_files <CR>", opts)
 -- keymap("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>", opts)
 -- keymap("n", "<leader>fw", "<cmd> Telescope live_grep <CR>")
 -- keymap("n", "<leader>gt", "<cmd> Telescope git_status <CR>")
@@ -26,3 +26,17 @@ keymap("n", "<leader>ff", "<cmd> Telescope find_files <CR>", opts)
 keymap("n", "<Tab>", "<cmd> BufferLineCycleNext <CR>")
 keymap("n", "<S-Tab>", "<cmd> BufferLineCyclePrev <CR>")
 keymap("n", "<C-q>", "<cmd> bd <CR>")
+
+
+-- Add conform.nvim mapping to format entire directory
+vim.cmd [[command! FormatDirectory lua ConformFormatDirectory()]]
+
+function ConformFormatDirectory()
+    local current_directory = vim.fn.expand('%:p:h')
+    local files = vim.fn.systemlist('find ' .. current_directory .. ' -type f -name "*.lua"') -- Change the file extension as needed
+    
+    print("Files in the current directory:")
+    for _, file in ipairs(files) do
+        print(file)
+    end
+end
