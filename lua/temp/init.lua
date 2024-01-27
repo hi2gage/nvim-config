@@ -1,4 +1,4 @@
-ocal plugins = {
+local plugins = {
 	{ lazy = true, "nvim-lua/plenary.nvim" },
 	-- { import = "gage.plugins.configs" },
 
