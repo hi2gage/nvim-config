@@ -6,6 +6,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 keymap("n", "<leader>e", ":Lex 30<cr>", opts)
+keymap("n", "<C-s>", "<cmd> w <CR>", opts)
 
 -- Insert Mode --
 -- JK to go exit Insert Mode
@@ -27,16 +28,30 @@ keymap("n", "<Tab>", "<cmd> BufferLineCycleNext <CR>")
 keymap("n", "<S-Tab>", "<cmd> BufferLineCyclePrev <CR>")
 keymap("n", "<C-q>", "<cmd> bd <CR>")
 
+-- comment.nvim
+keymap("n", "<leader>/", function()
+	require("Comment.api").toggle.linewise.current()
+end, { desc = "Comment Line" })
+
+keymap(
+	"v",
+	"<leader>/",
+	"<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
+	{ desc = "Comment Line" }
+)
 
 -- Add conform.nvim mapping to format entire directory
-vim.cmd [[command! FormatDirectory lua ConformFormatDirectory()]]
+vim.cmd([[command! FormatDirectory lua ConformFormatDirectory()]])
 
 function ConformFormatDirectory()
-    local current_directory = vim.fn.expand('%:p:h')
-    local files = vim.fn.systemlist('find ' .. current_directory .. ' -type f -name "*.lua"') -- Change the file extension as needed
-    
-    print("Files in the current directory:")
-    for _, file in ipairs(files) do
-        print(file)
-    end
+	local current_directory = vim.fn.expand("%:p:h")
+	local lua_files = vim.fn.glob(current_directory .. "/*.lua", true, true)
+
+	for _, file in ipairs(lua_files) do
+		vim.cmd("silent edit " .. file)
+		vim.cmd("silent saveas " .. file)
+		vim.cmd("silent bdelete!")
+	end
+
+	print("All Lua files in the current directory have been opened and saved.")
 end
